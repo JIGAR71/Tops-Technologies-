@@ -1,5 +1,4 @@
 # Module 7 - Introduction to Python
-# 10 Question-Answers with a Human Touch 💡
 
 # 1) What are the types of Applications?
 """
