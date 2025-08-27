@@ -1,85 +1,72 @@
-class SchoolManagement:
+import random
+
+class busreservation:
     def __init__(self):
-        self.students = {}
-        self.next_id = 1
+        self.routes = {"mumbai to pune":500,"delhi to jaipur":600,"bangalore to chennai":700,"ahmedabad to surat":400,"kolkata to digha":350}
+        self.tickets = {}
+        self.seats = {}
 
-    def new_admission(self, name, age, student_class, mobile):
-        if age < 5 or age > 18:
-            return "Age must be between 5 and 18!"
-        if student_class < 1 or student_class > 12:
-            return "Class must be between 1 and 12!"
-        if len(mobile) != 10 or not mobile.isdigit():
-            return "Mobile number must be 10 digits!"
+    def showroutes(self):
+        for r,p in self.routes.items():
+            print(r,"- ₹",p)
 
-        sid = self.next_id
-        self.students[sid] = [name, age, student_class, mobile]
-        self.next_id += 1
-        return f"Student admitted successfully! ID: {sid}"
+    def bookticket(self):
+        n=input("name:")
+        a=int(input("age:"))
+        m=input("mobile:")
+        self.showroutes()
+        r=input("route:")
+        if r not in self.routes:
+            print("invalid route")
+            return
+        if self.seats.get(r,0)>=40:
+            print("full")
+            return
+        tid="T"+str(random.randint(10000,99999))
+        sn=self.seats.get(r,0)+1
+        self.seats[r]=sn
+        self.tickets[tid]={"name":n,"age":a,"mobile":m,"route":r,"seat":sn,"price":self.routes[r]}
+        print("ticket booked id:",tid," seat:",sn)
 
-    def view_student(self, sid):
-        if sid in self.students:
-            d = self.students[sid]
-            return f"ID: {sid}, Name: {d[0]}, Age: {d[1]}, Class: {d[2]}, Mobile: {d[3]}"
+    def viewticket(self):
+        tid=input("ticket id:")
+        if tid in self.tickets:
+            t=self.tickets[tid]
+            for k,v in t.items():
+                print(k,":",v)
         else:
-            return "No record found!"
+            print("not found")
 
-    def update_student(self, sid, mobile=None, student_class=None):
-        if sid not in self.students:
-            return "No record found!"
-        if mobile:
-            if len(mobile) == 10 and mobile.isdigit():
-                self.students[sid][3] = mobile
-            else:
-                return "Mobile must be 10 digits!"
-        if student_class:
-            if 1 <= student_class <= 12:
-                self.students[sid][2] = student_class
-            else:
-                return "Class must be between 1 and 12!"
-        return f"Student ID {sid} updated!"
-
-    def remove_student(self, sid):
-        if sid in self.students:
-            del self.students[sid]
-            return f"Student ID {sid} removed!"
+    def cancelticket(self):
+        tid=input("ticket id:")
+        if tid in self.tickets:
+            r=self.tickets[tid]["route"]
+            del self.tickets[tid]
+            self.seats[r]-=1
+            print("ticket cancelled")
         else:
-            return "No record found!"
+            print("not found")
 
     def run(self):
         while True:
-            print("\n--- School Management ---")
-            print("1. New Admission")
-            print("2. View Student")
-            print("3. Update Student")
-            print("4. Remove Student")
-            print("5. Exit")
-            ch = input("Enter choice: ")
-
-            if ch == "1":
-                name = input("Name: ")
-                age = int(input("Age: "))
-                cls = int(input("Class (1-12): "))
-                mob = input("Guardian Mobile: ")
-                print(self.new_admission(name, age, cls, mob))
-            elif ch == "2":
-                sid = int(input("Student ID: "))
-                print(self.view_student(sid))
-            elif ch == "3":
-                sid = int(input("Student ID: "))
-                mob = input("New Mobile (leave blank to skip): ")
-                cls = input("New Class (leave blank to skip): ")
-                mob = mob if mob.strip() != "" else None
-                cls = int(cls) if cls.strip().isdigit() else None
-                print(self.update_student(sid, mob, cls))
-            elif ch == "4":
-                sid = int(input("Student ID: "))
-                print(self.remove_student(sid))
-            elif ch == "5":
-                print("Exiting system...")
+            print("1.show routes")
+            print("2.book ticket")
+            print("3.view ticket")
+            print("4.cancel ticket")
+            print("5.exit")
+            ch=input("choice:")
+            if ch=="1":
+                self.showroutes()
+            elif ch=="2":
+                self.bookticket()
+            elif ch=="3":
+                self.viewticket()
+            elif ch=="4":
+                self.cancelticket()
+            elif ch=="5":
                 break
             else:
-                print("Invalid choice!")
+                print("wrong choice")
 
-if __name__ == "__main__":
-    sm = SchoolManagement()
-    sm.run()
+br=busreservation()
+br.run()

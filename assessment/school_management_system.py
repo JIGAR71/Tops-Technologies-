@@ -1,85 +1,78 @@
-class SchoolManagement:
+class schoolmanagement:
     def __init__(self):
         self.students = {}
         self.next_id = 1
 
-    def new_admission(self, name, age, student_class, mobile):
+    def newadmission(self, name, age, std, mobile):
         if age < 5 or age > 18:
-            return "Age must be between 5 and 18!"
-        if student_class < 1 or student_class > 12:
-            return "Class must be between 1 and 12!"
-        if len(mobile) != 10 or not mobile.isdigit():
-            return "Mobile number must be 10 digits!"
-
+            return "age must be 5 to 18"
+        if std < 1 or std > 12:
+            return "class must be 1 to 12"
+        if len(mobile)!=10 or not mobile.isdigit():
+            return "mobile must be 10 digit"
         sid = self.next_id
-        self.students[sid] = [name, age, student_class, mobile]
         self.next_id += 1
-        return f"Student admitted successfully! ID: {sid}"
+        self.students[sid] = {"name":name,"age":age,"class":std,"mobile":mobile}
+        return f"admission done id {sid}"
 
-    def view_student(self, sid):
+    def viewstudent(self, sid):
         if sid in self.students:
-            d = self.students[sid]
-            return f"ID: {sid}, Name: {d[0]}, Age: {d[1]}, Class: {d[2]}, Mobile: {d[3]}"
-        else:
-            return "No record found!"
+            s = self.students[sid]
+            return f"id:{sid} name:{s['name']} age:{s['age']} class:{s['class']} mobile:{s['mobile']}"
+        return "not found"
 
-    def update_student(self, sid, mobile=None, student_class=None):
+    def updatestudent(self, sid, mobile=None, std=None):
         if sid not in self.students:
-            return "No record found!"
+            return "not found"
         if mobile:
-            if len(mobile) == 10 and mobile.isdigit():
-                self.students[sid][3] = mobile
+            if len(mobile)==10 and mobile.isdigit():
+                self.students[sid]["mobile"]=mobile
             else:
-                return "Mobile must be 10 digits!"
-        if student_class:
-            if 1 <= student_class <= 12:
-                self.students[sid][2] = student_class
+                return "mobile must be 10 digit"
+        if std:
+            if 1<=std<=12:
+                self.students[sid]["class"]=std
             else:
-                return "Class must be between 1 and 12!"
-        return f"Student ID {sid} updated!"
+                return "class must be 1 to 12"
+        return f"id {sid} updated"
 
-    def remove_student(self, sid):
+    def removestudent(self, sid):
         if sid in self.students:
             del self.students[sid]
-            return f"Student ID {sid} removed!"
-        else:
-            return "No record found!"
+            return f"id {sid} deleted"
+        return "not found"
 
     def run(self):
         while True:
-            print("\n--- School Management ---")
-            print("1. New Admission")
-            print("2. View Student")
-            print("3. Update Student")
-            print("4. Remove Student")
-            print("5. Exit")
-            ch = input("Enter choice: ")
-
-            if ch == "1":
-                name = input("Name: ")
-                age = int(input("Age: "))
-                cls = int(input("Class (1-12): "))
-                mob = input("Guardian Mobile: ")
-                print(self.new_admission(name, age, cls, mob))
-            elif ch == "2":
-                sid = int(input("Student ID: "))
-                print(self.view_student(sid))
-            elif ch == "3":
-                sid = int(input("Student ID: "))
-                mob = input("New Mobile (leave blank to skip): ")
-                cls = input("New Class (leave blank to skip): ")
-                mob = mob if mob.strip() != "" else None
-                cls = int(cls) if cls.strip().isdigit() else None
-                print(self.update_student(sid, mob, cls))
-            elif ch == "4":
-                sid = int(input("Student ID: "))
-                print(self.remove_student(sid))
-            elif ch == "5":
-                print("Exiting system...")
+            print("1.new admission")
+            print("2.view student")
+            print("3.update student")
+            print("4.remove student")
+            print("5.exit")
+            ch = input("enter choice:")
+            if ch=="1":
+                n=input("name:")
+                a=int(input("age:"))
+                c=int(input("class:"))
+                m=input("mobile:")
+                print(self.newadmission(n,a,c,m))
+            elif ch=="2":
+                sid=int(input("id:"))
+                print(self.viewstudent(sid))
+            elif ch=="3":
+                sid=int(input("id:"))
+                m=input("new mobile blank if no change:")
+                c=input("new class blank if no change:")
+                m = m if m.strip()!="" else None
+                c = int(c) if c.strip().isdigit() else None
+                print(self.updatestudent(sid,m,c))
+            elif ch=="4":
+                sid=int(input("id:"))
+                print(self.removestudent(sid))
+            elif ch=="5":
                 break
             else:
-                print("Invalid choice!")
+                print("wrong choice")
 
-if __name__ == "__main__":
-    sm = SchoolManagement()
-    sm.run()
+sm = schoolmanagement()
+sm.run()
